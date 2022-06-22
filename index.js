@@ -1,16 +1,15 @@
 const express = require("express");
-const { json } = require("express");
-const flights = require("./controllers/flightController");
-const models = require("./models/Flight");
 const routes = require("./routes/flightRoute");
 
 const app = express();
 
-app.use(json());
+// Body Parser Middleware
+app.use(express.json())
+app.use(express.urlencoded({extended:false})) // handles form submission
 
 app.use("/", routes);
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3050;
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
