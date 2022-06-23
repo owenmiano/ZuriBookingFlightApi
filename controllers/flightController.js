@@ -1,9 +1,6 @@
-// const flights=require('../models/Flight')
-// const allFlights=flights.exampleModel;
+const flights=require('../models/Flight')
+const allFlights=flights.exampleModel;
 const moment=require('moment')
-const fs = require('fs');
-const flights=require('../models/flight.json')
-
 
 
 //Base url
@@ -19,34 +16,33 @@ exports.bookFlight = (req, res) => {
         price:req.body.price,
         date:moment().format('DD-MM-YYYY')
  }
-if(!newFlight.title | !newFlight.time | !newFlight.price | !newFlight.date){
-        return res.status(400).json({msg:'Please fill all fields'})
+// checks if all fields have been filled
+if(!newFlight.title | !newFlight.price){
+        return res.status(400).json({message:'Please fill all fields'})
     }
-    flights.push(newFlight)
-    flights.forEach((item, i) => {
+    //  adds the element to the array
+    allFlights.push(newFlight)
+    //  adds id to each element to be uniquely identified
+    allFlights.forEach((item, i) => {
         item.id = i + 1;
       });
-
-       
-fs.writeFile("flight.json",JSON.stringify(flights,null,2),function (err) {
-    if (err) throw err;
-    console.log("JSON file has been saved.");
-});
-console.log(flights)
+console.log(allFlights)
 
 res.status(200).json({message:"Flight has been booked successfully"})
 }
 
 // Get all Flights
 exports.fetchAllFlights = (req, res) => {
-    if(flightData.length>0){
-       return res.status(200).json({flights})
+    // checks if the array has any element or not
+    if(allFlights.length>0){
+       return res.status(200).json(allFlights)
     }
     return res.status(400).json({message:'No available flights'})
 }
 
 // Get a single Flight
 exports.getSingleFlight = (req, res) => {
+    //  checks whether at least one element matches with the users input
    const found=allFlights.some(allFlight=>allFlight.id===parseInt(req.params.id))
  
     if(found){
@@ -65,9 +61,9 @@ exports.updateSingleFlight = (req, res) => {
         allFlights.forEach(allFlight=>{
             if(allFlight.id===parseInt(req.params.id)){
                 allFlight.title=updateFlight.title ? updateFlight.title:allFlight.title;
-                allFlight.time=new Date().toLocaleTimeString();
+                allFlight.time=new Date().toLocaleTimeString('en-US', { hour: 'numeric',minute: 'numeric'})
                 allFlight.price=updateFlight.price ? updateFlight.price:allFlight.price;
-                allFlight.date=new Date().toLocaleDateString();
+                allFlight.date=moment().format('DD-MM-YYYY')
 
                 res.json({message:`Flight with the id of ${req.params.id} has been updated successfully!`,allFlight})
             }
@@ -79,8 +75,6 @@ exports.updateSingleFlight = (req, res) => {
 
 // Delete Flight
 exports.deleteFlight = (req, res) => {
-    
-  
     const found=allFlights.some(allFlight=>allFlight.id===parseInt(req.params.id))
 
     if(found){

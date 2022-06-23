@@ -10,7 +10,7 @@ router.post('/bookFlight', controller.bookFlight)
 // Get all Flights         get Method
 router.get('/getAllFlights', controller.fetchAllFlights)
 
-// Get Single Flights         get Method
+// Get Single Flight         get Method
 router.get('/getSingleFlight/:id', controller.getSingleFlight)
 
 //Update/Edit Flight        put Method
